@@ -1,14 +1,7 @@
 import { numeric, pgTable, serial, text } from "drizzle-orm/pg-core";
 
-export const collections = pgTable("collections", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  slug: text("slug").notNull(),
-});
-
-export type Collection = typeof collections.$inferSelect;
-
 export const categories = pgTable("categories", {
+  id: serial("id").primaryKey(),
   slug: text("slug").notNull().primaryKey(),
   name: text("name").notNull(),
   image_url: text("image_url"),
@@ -17,6 +10,7 @@ export const categories = pgTable("categories", {
 export type Category = typeof categories.$inferSelect;
 
 export const products = pgTable("products", {
+  id: serial("id").primaryKey(),
   slug: text("slug").notNull().primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),

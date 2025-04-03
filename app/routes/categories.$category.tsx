@@ -39,7 +39,7 @@ function CategoryPage() {
               height="48"
               decoding="sync"
               className="mb-2 h-14 w-14 border hover:bg-accent2 object-cover"
-              src={product.image_url}
+              src={`https://picsum.photos/id/${product.id}/48`}
             />
             <span className="text-xs">{product.name}</span>
             <span className="text-xs text-[#FF6B00]">{product.price}</span>

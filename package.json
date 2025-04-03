@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
-    "build": "COMPATIBILITY_DATE=2024-11-25 vinxi build",
+    "build": "vinxi build",
     "start": "vinxi start"
   },
   "keywords": [],

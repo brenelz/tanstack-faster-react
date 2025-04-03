@@ -30,7 +30,7 @@ function ProductPage() {
             height="400"
             decoding="sync"
             className="h-[400px] w-[400px] border object-cover"
-            src={data.product.image_url}
+            src={`https://picsum.photos/id/${data.product.id}/400`}
           />
         </div>
 
