@@ -1,11 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getProduct } from "@/lib/server";
+import { preloadImageIds } from "@/lib/imagePreloader";
 
 export const Route = createFileRoute("/products/$product")({
   component: ProductPage,
   loader: async ({ params }) => {
+    const product = await getProduct({ data: { product: params.product } });
+
+    preloadImageIds([product.id], 400)
+
     return {
-      product: await getProduct({ data: { product: params.product } }),
+      product
     };
   },
   staleTime: 1000 * 60 * 5, // 5 minutes

@@ -2,12 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { getCategory } from "@/lib/server";
 import { Product } from "@/db/schema";
+import { preloadImageIds } from "@/lib/imagePreloader";
 
 export const Route = createFileRoute("/categories/$category")({
   component: CategoryPage,
   loader: async ({ params }) => {
+    const category = await getCategory({ data: { slug: params.category } });
+
+    preloadImageIds(category.products.map(product => product.id), 48)
+
     return {
-      category: await getCategory({ data: { slug: params.category } }),
+      category
     };
   },
   staleTime: 1000 * 60 * 5, // 5 minutes
