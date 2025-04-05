@@ -32,13 +32,14 @@ export const Route = createRootRoute({
     links: [{ rel: "stylesheet", href: appCss }],
   }),
   loader: async () => {
+    const categories = await getCategories();
+
     // don't block loading the page
-    const categoriesPromise = getCategories();
     const cartPromise = getCart();
 
     return {
       cartPromise,
-      categoriesPromise,
+      categories,
     };
   },
   component: RootComponent,
@@ -66,21 +67,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <Header cartPromise={data.cartPromise} />
           <div className="pt-[85px] sm:pt-[70px]">
             <div className="flex flex-grow font-mono">
-              <Suspense fallback={<div className="p-4">Loading...</div>}>
-                <Await promise={data.categoriesPromise}>
-                  {(categories) => (
-                    <>
-                      <aside className="fixed left-0 hidden w-64 min-w-64 max-w-64 overflow-y-auto border-r p-4 md:block">
-                        <Sidebar categories={categories} />
-                      </aside>
-                      <main className="min-h-[calc(100vh-113px)] flex-1 overflow-y-auto p-4 pt-0 md:pl-64">
-                        <div className="w-full p-4">
-                          {children}
-                        </div>
-                      </main>
-                    </>
-                  )}</Await>
-              </Suspense>
+              <aside className="fixed left-0 hidden w-64 min-w-64 max-w-64 overflow-y-auto border-r p-4 md:block">
+                <Sidebar categories={data.categories} />
+              </aside>
+              <main className="min-h-[calc(100vh-113px)] flex-1 overflow-y-auto p-4 pt-0 md:pl-64">
+                <div className="w-full p-4">
+                  {children}
+                </div>
+              </main>
             </div>
           </div>
         </div>
