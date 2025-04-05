@@ -1,4 +1,4 @@
-import { numeric, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { numeric, pgTable, serial, text, timestamp, integer } from "drizzle-orm/pg-core";
 
 export const categories = pgTable("categories", {
   id: serial("id").primaryKey(),
@@ -22,3 +22,15 @@ export const products = pgTable("products", {
 });
 
 export type Product = typeof products.$inferSelect;
+
+export const cartItems = pgTable("cart_items", {
+  id: serial("id").primaryKey(),
+  product_id: integer("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+  quantity: integer("quantity").notNull().default(1),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export type CartItem = typeof cartItems.$inferSelect;

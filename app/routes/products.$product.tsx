@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { getProduct } from "@/lib/server";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { addItemToCart, getProduct } from "@/lib/server";
 import { preloadImageIds } from "@/lib/imagePreloader";
+import { useState } from "react";
 
 export const Route = createFileRoute("/products/$product")({
   component: ProductPage,
@@ -18,6 +19,17 @@ export const Route = createFileRoute("/products/$product")({
 
 function ProductPage() {
   const data = Route.useLoaderData();
+  const [isAdding, setIsAdding] = useState(false);
+  const navigate = useNavigate();
+  const router = useRouter();
+
+  const handleAddToCart = async () => {
+    setIsAdding(true);
+    await addItemToCart({ data: { product: data.product } });
+    setIsAdding(false);
+    router.invalidate();
+    navigate({ to: '/cart' });
+  };
 
   if (!data.product) {
     return <div>Product not found</div>;
@@ -48,6 +60,14 @@ function ProductPage() {
             {data.product.price}
           </p>
           <p className="text-gray-600">{data.product.description}</p>
+          <button
+            className="w-full bg-[#FF6B00] text-white py-2 px-4 rounded-md hover:bg-[#FFA366] disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleAddToCart}
+            disabled={isAdding}
+          >
+            {isAdding ? "Adding..." : "Add to Cart"}
+          </button>
+
         </div>
       </div>
     </div>
