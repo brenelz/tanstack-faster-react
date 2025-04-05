@@ -1,7 +1,12 @@
-import { getCart, removeFromCart } from "@/lib/server";
+import { getCart, removeFromCart, type Cart } from "@/lib/server";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Suspense } from "react";
+import { Await } from "@tanstack/react-router";
+
+interface CartLoaderData {
+    cartPromise: Promise<Cart>;
+}
 
 export const Route = createFileRoute("/cart")({
     component: CartPage,
@@ -9,16 +14,16 @@ export const Route = createFileRoute("/cart")({
         const cartPromise = getCart();
         return {
             cartPromise
-        };
+        } satisfies CartLoaderData;
     }
 });
 
 function CartPage() {
-    const data = Route.useLoaderData();
+    const { cartPromise } = Route.useLoaderData();
     const router = useRouter();
 
-    const total = () => {
-        return cart()?.reduce((sum, item) => {
+    const calculateTotal = (cart: Cart) => {
+        return cart.reduce((sum, item) => {
             if (!item.product) return sum;
             return sum + (Number(item.product.price) * item.quantity);
         }, 0).toFixed(2);
@@ -33,47 +38,50 @@ function CartPage() {
         <div className="w-full space-y-8">
             <h1 className="text-3xl font-bold text-[#FF6B00]">Shopping Cart</h1>
             <Suspense fallback={<div>Loading...</div>}>
-                <Show
-                    when={cart() && cart()!.length > 0}
-                    fallback={
-                        <div className="bg-white rounded-lg shadow">
-                            <div className="p-6">
-                                <p className="text-gray-600">Your cart is empty.</p>
-                            </div>
-                        </div>
-                    }
-                >
-                    <div className="bg-white rounded-lg shadow">
-                        <div className="p-6">
-                            <div className="space-y-4">
-                                <For each={cart()}>
-                                    {(item) => (
-                                        <Show when={item.product} fallback={null}>
-                                            {(product) => (
-                                                <div className="flex items-center justify-between border-b pb-4">
+                <Await promise={cartPromise}>
+                    {(cart: Cart) => {
+                        if (!cart || cart.length === 0) {
+                            return (
+                                <div className="bg-white rounded-lg shadow">
+                                    <div className="p-6">
+                                        <p className="text-gray-600">Your cart is empty.</p>
+                                    </div>
+                                </div>
+                            );
+                        }
+
+                        return (
+                            <div className="bg-white rounded-lg shadow">
+                                <div className="p-6">
+                                    <div className="space-y-4">
+                                        {cart.map((item) => {
+                                            if (!item.product) return null;
+
+                                            return (
+                                                <div key={item.id} className="flex items-center justify-between border-b pb-4">
                                                     <div className="flex items-center space-x-4">
                                                         <Link
                                                             to="/products/$product"
-                                                            params={{ product: product().slug }}
+                                                            params={{ product: item.product.slug }}
                                                             className="hover:opacity-75"
                                                         >
                                                             <img
-                                                                alt={`A picture of ${product().name}`}
+                                                                alt={`A picture of ${item.product.name}`}
                                                                 width="64"
                                                                 height="64"
                                                                 className="h-16 w-16 border object-cover"
-                                                                src={`https://picsum.photos/id/${product().id}/64`}
+                                                                src={`https://picsum.photos/id/${item.product.id}/64`}
                                                             />
                                                         </Link>
                                                         <div>
                                                             <Link
                                                                 to="/products/$product"
-                                                                params={{ product: product().slug }}
+                                                                params={{ product: item.product.slug }}
                                                                 className="text-lg font-medium text-[#FF6B00] hover:text-[#FFA366]"
                                                             >
-                                                                {product().name}
+                                                                {item.product.name}
                                                             </Link>
-                                                            <p className="text-sm text-gray-600">${product().price}</p>
+                                                            <p className="text-sm text-gray-600">${item.product.price}</p>
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center space-x-6">
@@ -83,7 +91,7 @@ function CartPage() {
                                                         </div>
                                                         <div className="text-right">
                                                             <p className="text-lg font-medium text-[#FF6B00]">
-                                                                ${(Number(product().price) * item.quantity).toFixed(2)}
+                                                                ${(Number(item.product.price) * item.quantity).toFixed(2)}
                                                             </p>
                                                         </div>
                                                         <button
@@ -98,9 +106,9 @@ function CartPage() {
                                                                 viewBox="0 0 24 24"
                                                                 fill="none"
                                                                 stroke="currentColor"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
                                                                 className="h-5 w-5"
                                                             >
                                                                 <path d="M3 6h18" />
@@ -112,20 +120,20 @@ function CartPage() {
                                                         </button>
                                                     </div>
                                                 </div>
-                                            )}
-                                        </Show>
-                                    )}
-                                </For>
-                                <div className="flex justify-end pt-4">
-                                    <div className="text-right">
-                                        <p className="text-sm text-gray-600">Total</p>
-                                        <p className="text-2xl font-bold text-[#FF6B00]">${total()}</p>
+                                            );
+                                        })}
+                                        <div className="flex justify-end pt-4">
+                                            <div className="text-right">
+                                                <p className="text-sm text-gray-600">Total</p>
+                                                <p className="text-2xl font-bold text-[#FF6B00]">${calculateTotal(cart)}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </Show>
+                        );
+                    }}
+                </Await>
             </Suspense>
         </div>
     );
