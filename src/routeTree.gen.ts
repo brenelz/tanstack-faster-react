@@ -10,33 +10,34 @@
 
 // Import Routes
 
+import type { FileRoutesByPath, CreateFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
-import { Route as CartImport } from './routes/cart'
-import { Route as IndexImport } from './routes/index'
-import { Route as ProductsProductImport } from './routes/products.$product'
-import { Route as CategoriesCategoryImport } from './routes/categories.$category'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProductsProductRouteImport } from './routes/products.$product'
+import { Route as CategoriesCategoryRouteImport } from './routes/categories.$category'
 
 // Create/Update Routes
 
-const CartRoute = CartImport.update({
+const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ProductsProductRoute = ProductsProductImport.update({
+const ProductsProductRoute = ProductsProductRouteImport.update({
   id: '/products/$product',
   path: '/products/$product',
   getParentRoute: () => rootRoute,
 } as any)
 
-const CategoriesCategoryRoute = CategoriesCategoryImport.update({
+const CategoriesCategoryRoute = CategoriesCategoryRouteImport.update({
   id: '/categories/$category',
   path: '/categories/$category',
   getParentRoute: () => rootRoute,
@@ -50,31 +51,70 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/cart': {
       id: '/cart'
       path: '/cart'
       fullPath: '/cart'
-      preLoaderRoute: typeof CartImport
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRoute
     }
     '/categories/$category': {
       id: '/categories/$category'
       path: '/categories/$category'
       fullPath: '/categories/$category'
-      preLoaderRoute: typeof CategoriesCategoryImport
+      preLoaderRoute: typeof CategoriesCategoryRouteImport
       parentRoute: typeof rootRoute
     }
     '/products/$product': {
       id: '/products/$product'
       path: '/products/$product'
       fullPath: '/products/$product'
-      preLoaderRoute: typeof ProductsProductImport
+      preLoaderRoute: typeof ProductsProductRouteImport
       parentRoute: typeof rootRoute
     }
   }
+}
+
+// Add type-safety to the createFileRoute function across the route tree
+
+declare module './routes/index' {
+  const createFileRoute: CreateFileRoute<
+    '/',
+    FileRoutesByPath['/']['parentRoute'],
+    FileRoutesByPath['/']['id'],
+    FileRoutesByPath['/']['path'],
+    FileRoutesByPath['/']['fullPath']
+  >
+}
+declare module './routes/cart' {
+  const createFileRoute: CreateFileRoute<
+    '/cart',
+    FileRoutesByPath['/cart']['parentRoute'],
+    FileRoutesByPath['/cart']['id'],
+    FileRoutesByPath['/cart']['path'],
+    FileRoutesByPath['/cart']['fullPath']
+  >
+}
+declare module './routes/categories.$category' {
+  const createFileRoute: CreateFileRoute<
+    '/categories/$category',
+    FileRoutesByPath['/categories/$category']['parentRoute'],
+    FileRoutesByPath['/categories/$category']['id'],
+    FileRoutesByPath['/categories/$category']['path'],
+    FileRoutesByPath['/categories/$category']['fullPath']
+  >
+}
+declare module './routes/products.$product' {
+  const createFileRoute: CreateFileRoute<
+    '/products/$product',
+    FileRoutesByPath['/products/$product']['parentRoute'],
+    FileRoutesByPath['/products/$product']['id'],
+    FileRoutesByPath['/products/$product']['path'],
+    FileRoutesByPath['/products/$product']['fullPath']
+  >
 }
 
 // Create and export the route tree
@@ -107,11 +147,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/cart' | '/categories/$category' | '/products/$product'
   id:
-  | '__root__'
-  | '/'
-  | '/cart'
-  | '/categories/$category'
-  | '/products/$product'
+    | '__root__'
+    | '/'
+    | '/cart'
+    | '/categories/$category'
+    | '/products/$product'
   fileRoutesById: FileRoutesById
 }
 
@@ -132,6 +172,9 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+// @ts-ignore
+import type * as ServerTypes from '../.tanstack-start/server-routes/routeTree.gen.ts'
 
 /* ROUTE_MANIFEST_START
 {

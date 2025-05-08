@@ -1,9 +1,9 @@
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import {  useNavigate, useRouter } from "@tanstack/react-router";
 import { addItemToCart, getProduct } from "@/lib/server";
 import { preloadImageIds } from "@/lib/imagePreloader";
 import { useState } from "react";
 
-export const Route = createFileRoute("/products/$product")({
+export const Route = createFileRoute({
   component: ProductPage,
   loader: async ({ params }) => {
     const product = await getProduct({ data: { product: params.product } });
