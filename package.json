@@ -13,8 +13,8 @@
   "description": "",
   "dependencies": {
     "@neondatabase/serverless": "^1.0.0",
-    "@tanstack/react-router": "https://pkg.pr.new/TanStack/router/@tanstack/react-router@4111",
-    "@tanstack/react-start": "https://pkg.pr.new/TanStack/router/@tanstack/react-start@4111",
+    "@tanstack/react-router": "v1.120.4-alpha.1",
+    "@tanstack/react-start": "v1.120.4-alpha.1",
     "drizzle-kit": "^0.30.6",
     "drizzle-orm": "^0.41.0",
     "react": "^19.1.0",
@@ -23,11 +23,14 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.17",
-    "@tanstack/react-router-devtools": "https://pkg.pr.new/TanStack/router/@tanstack/react-router-devtools@4111",
+    "@tanstack/react-router-devtools": "v1.120.4-alpha.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "tailwindcss": "^4",
     "typescript": "^5.8.2",
     "vite-tsconfig-paths": "^5.1.4"
+  },
+  "resolutions": {
+    "vite": "6.3.5"
   }
 }
