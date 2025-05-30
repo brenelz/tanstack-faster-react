@@ -1,5 +1,5 @@
 import { getCart, removeFromCart, type Cart } from "@/lib/server";
-import {, useRouter } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { Await } from "@tanstack/react-router";
