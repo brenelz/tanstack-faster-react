@@ -13,10 +13,11 @@ export function Sidebar(props: SidebarProps) {
       </h2>
       <ul className="flex flex-col items-start justify-center">
         {props.categories.map(category => (
-          <li className="w-full">
+          <li className="w-full" key={category.id}>
             <Link
               className="block w-full py-1 text-xs text-gray-800 hover:bg-accent2 hover:underline"
-              to={`/categories/${category.slug}`}
+              to={`/categories/$category`}
+              params={{ category: category.slug }}
             >
               {category.name}
             </Link>

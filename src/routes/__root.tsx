@@ -12,14 +12,12 @@ import * as React from 'react'
 import { getCart, getCategories } from '@/lib/server'
 import Header from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
-import { preloadImageIds } from '@/lib/imagePreloader'
-import { Suspense } from 'react'
 
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       {
-        charset: "utf-8",
+        charSet: "utf-8",
       },
       {
         name: "viewport",

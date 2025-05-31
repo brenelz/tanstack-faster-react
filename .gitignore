@@ -18,3 +18,4 @@ yarn.lock
 /playwright/.cache/
 
 .tanstack-start/build
+.nitro
