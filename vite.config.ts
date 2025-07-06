@@ -12,6 +12,10 @@ export default defineConfig({
       projects: ["./tsconfig.json"],
     }),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      tsr: {
+        verboseFileRoutes: false
+      }
+    }),
   ],
 });

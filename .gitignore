@@ -19,3 +19,4 @@ yarn.lock
 
 .tanstack-start/build
 .nitro
+.tanstack
