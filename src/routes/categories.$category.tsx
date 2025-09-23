@@ -1,10 +1,10 @@
 import { } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { getCategory } from "@/lib/server";
 import { preloadImageIds } from "@/lib/imagePreloader";
 import { use } from "react";
 
-export const Route = createFileRoute({
+export const Route = createFileRoute("/categories/$category")({
   component: CategoryPage,
   loader: async ({ params }) => {
     const categoryPromise = getCategory({ data: { slug: params.category } });

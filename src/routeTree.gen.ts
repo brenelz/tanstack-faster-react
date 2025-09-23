@@ -8,12 +8,6 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import type { CreateFileRoute, FileRoutesByPath } from '@tanstack/react-router'
-import type {
-  CreateServerFileRoute,
-  ServerFileRoutesByPath,
-} from '@tanstack/react-start/server'
-
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
@@ -82,13 +76,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/cart': {
       id: '/cart'
       path: '/cart'
@@ -96,11 +83,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/categories/$category': {
-      id: '/categories/$category'
-      path: '/categories/$category'
-      fullPath: '/categories/$category'
-      preLoaderRoute: typeof CategoriesCategoryRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products/$product': {
@@ -110,76 +97,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsProductRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/categories/$category': {
+      id: '/categories/$category'
+      path: '/categories/$category'
+      fullPath: '/categories/$category'
+      preLoaderRoute: typeof CategoriesCategoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
-}
-
-declare module './routes/index' {
-  const createFileRoute: CreateFileRoute<
-    '/',
-    FileRoutesByPath['/']['parentRoute'],
-    FileRoutesByPath['/']['id'],
-    FileRoutesByPath['/']['path'],
-    FileRoutesByPath['/']['fullPath']
-  >
-
-  const createServerFileRoute: CreateServerFileRoute<
-    ServerFileRoutesByPath['/']['parentRoute'],
-    ServerFileRoutesByPath['/']['id'],
-    ServerFileRoutesByPath['/']['path'],
-    ServerFileRoutesByPath['/']['fullPath'],
-    unknown
-  >
-}
-declare module './routes/cart' {
-  const createFileRoute: CreateFileRoute<
-    '/cart',
-    FileRoutesByPath['/cart']['parentRoute'],
-    FileRoutesByPath['/cart']['id'],
-    FileRoutesByPath['/cart']['path'],
-    FileRoutesByPath['/cart']['fullPath']
-  >
-
-  const createServerFileRoute: CreateServerFileRoute<
-    ServerFileRoutesByPath['/cart']['parentRoute'],
-    ServerFileRoutesByPath['/cart']['id'],
-    ServerFileRoutesByPath['/cart']['path'],
-    ServerFileRoutesByPath['/cart']['fullPath'],
-    unknown
-  >
-}
-declare module './routes/categories.$category' {
-  const createFileRoute: CreateFileRoute<
-    '/categories/$category',
-    FileRoutesByPath['/categories/$category']['parentRoute'],
-    FileRoutesByPath['/categories/$category']['id'],
-    FileRoutesByPath['/categories/$category']['path'],
-    FileRoutesByPath['/categories/$category']['fullPath']
-  >
-
-  const createServerFileRoute: CreateServerFileRoute<
-    ServerFileRoutesByPath['/categories/$category']['parentRoute'],
-    ServerFileRoutesByPath['/categories/$category']['id'],
-    ServerFileRoutesByPath['/categories/$category']['path'],
-    ServerFileRoutesByPath['/categories/$category']['fullPath'],
-    unknown
-  >
-}
-declare module './routes/products.$product' {
-  const createFileRoute: CreateFileRoute<
-    '/products/$product',
-    FileRoutesByPath['/products/$product']['parentRoute'],
-    FileRoutesByPath['/products/$product']['id'],
-    FileRoutesByPath['/products/$product']['path'],
-    FileRoutesByPath['/products/$product']['fullPath']
-  >
-
-  const createServerFileRoute: CreateServerFileRoute<
-    ServerFileRoutesByPath['/products/$product']['parentRoute'],
-    ServerFileRoutesByPath['/products/$product']['id'],
-    ServerFileRoutesByPath['/products/$product']['path'],
-    ServerFileRoutesByPath['/products/$product']['fullPath'],
-    unknown
-  >
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -191,3 +116,11 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

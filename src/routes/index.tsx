@@ -1,7 +1,7 @@
-import { getRouteApi } from "@tanstack/react-router";
+import { getRouteApi, createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute({
+export const Route = createFileRoute("/")({
   component: Home,
 });
 

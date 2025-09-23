@@ -14,7 +14,7 @@ export const getCategories = createServerFn().handler(async () => {
 });
 
 export const getCategory = createServerFn()
-  .validator((p: { slug: string }) => {
+  .inputValidator((p: { slug: string }) => {
     return p;
   })
   .handler(async ({ data }) => {
@@ -36,7 +36,7 @@ export const getCategory = createServerFn()
   });
 
 export const getProduct = createServerFn()
-  .validator((p: { product: string }) => {
+  .inputValidator((p: { product: string }) => {
     return p;
   })
   .handler(async ({ data }) => {
@@ -74,7 +74,7 @@ export type Cart = Awaited<ReturnType<typeof getCart>>;
 
 // actions
 export const addItemToCart = createServerFn()
-  .validator((p: { product: Product }) => {
+  .inputValidator((p: { product: Product }) => {
     return p;
   })
   .handler(async ({ data }) => {
@@ -104,7 +104,7 @@ export const addItemToCart = createServerFn()
   });
 
 export const removeFromCart = createServerFn()
-  .validator((cartItem: { cartItemId: number }) => {
+  .inputValidator((cartItem: { cartItemId: number }) => {
     return cartItem;
   })
   .handler(async ({ data }) => {

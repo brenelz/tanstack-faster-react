@@ -1,5 +1,5 @@
 import { getCart, removeFromCart, type Cart } from "@/lib/server";
-import { useRouter } from "@tanstack/react-router";
+import { useRouter, createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { Await } from "@tanstack/react-router";
@@ -8,7 +8,7 @@ interface CartLoaderData {
     cartPromise: Promise<Cart>;
 }
 
-export const Route = createFileRoute({
+export const Route = createFileRoute("/cart")({
     component: CartPage,
     loader: async () => {
         const cartPromise = getCart();

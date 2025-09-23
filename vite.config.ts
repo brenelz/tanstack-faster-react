@@ -14,11 +14,7 @@ export default defineConfig({
       projects: ["./tsconfig.json"],
     }),
     tailwindcss(),
-    tanstackStart({
-      tsr: {
-        verboseFileRoutes: false
-      }
-    }),
+    tanstackStart(),
     viteReact(),
     nitro(),
   ],
